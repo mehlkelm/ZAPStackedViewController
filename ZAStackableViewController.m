@@ -3,7 +3,7 @@
 //  Feed Filter
 //
 //  Created by Stefan Pauwels on 04.06.12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Zozi Apps. All rights reserved.
 //
 
 #import "ZAStackableViewController.h"

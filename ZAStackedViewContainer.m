@@ -3,7 +3,7 @@
 //  Celsius
 //
 //  Created by Stefan Pauwels on 07.06.11.
-//  Copyright 2011 Eat This. All rights reserved.
+//  Copyright 2011 Zozi Apps. All rights reserved.
 //
 
 #import "ZAStackedViewContainer.h"
