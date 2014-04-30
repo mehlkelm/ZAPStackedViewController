@@ -14,12 +14,6 @@
 #define kStackableViewWidth 320.f
 //#define kBorderViewTag 777
 
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_INFO;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
-
 @implementation ZAStackedViewContainer
 
 - (void)viewDidLoad
@@ -233,7 +227,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     NSUInteger controllerCount = [self.viewControllers count];
     
     if (cumulativeWidth <= availableWidth) {
-        DDLogVerbose(@"Views can be laid without overlap");
+        //NSLog(@"Views can be laid without overlap");
 
         for (NSUInteger pos = 0; pos < controllerCount; pos++) {
             UIViewController <ZAStackableViewController> *vc = [self.viewControllers objectAtIndex:pos];
@@ -249,7 +243,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 viewWidth = MAX([vc desiredWidth], availableWidth - xOrigin);
             }
             CGRect newFrame = CGRectMake(xOrigin, 0.0f, viewWidth, self.contentView.frame.size.height);
-            DDLogVerbose(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
+            //NSLog(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
             vc.view.layer.shadowPath = nil;
             void (^animations)(void) = ^{
                 vc.view.frame = newFrame;
@@ -260,7 +254,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     vc.view.layer.shadowOffset = CGSizeMake(-2.0f, 0.0f);
                     vc.view.layer.shadowRadius = 0.5f;
                     vc.view.layer.shadowOpacity = 0.3f;
-                    vc.view.layer.shadowColor = [kColorMainDark CGColor];
+                    vc.view.layer.shadowColor = [[UIColor darkGrayColor] CGColor];
                     vc.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:vc.view.bounds].CGPath;
 //                    [[vc.view viewWithTag:kBorderViewTag] removeFromSuperview];
                 }
@@ -287,7 +281,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             }
         }
     } else {
-        DDLogInfo(@"Views have to overlap");
+        //NSLog(@"Views have to overlap");
         CGFloat neededOverlap = cumulativeWidth - availableWidth;
         CGFloat neededOverlapRemaining = neededOverlap;
         CGFloat currentOverlap = 0.0f;
@@ -308,7 +302,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             underSlider.view.layer.shadowPath = nil;
             overSlider.view.layer.shadowPath = nil;
             CGRect newFrame = CGRectMake(xOrigin, 0.0f, width, self.contentView.frame.size.height);
-            DDLogVerbose(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
+            NSLog(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
             void (^animations)(void) = ^{
                 overSlider.view.frame = newFrame;
             };
@@ -318,7 +312,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     overSlider.view.layer.shadowOffset = CGSizeMake(-2.0f, 0.0f);
                     overSlider.view.layer.shadowRadius = 0.5f;
                     overSlider.view.layer.shadowOpacity = 0.3f;
-                    overSlider.view.layer.shadowColor = [kColorMainDark CGColor];
+                    overSlider.view.layer.shadowColor = [[UIColor darkGrayColor] CGColor];
                     overSlider.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:overSlider.view.bounds].CGPath;
 //                    [[overSlider.view viewWithTag:kBorderViewTag] removeFromSuperview];
                 } else {
