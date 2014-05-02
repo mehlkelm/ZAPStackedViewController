@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZAStackableViewPanGestureRecognizer : UIPanGestureRecognizer
+@interface ZAPStackableViewPanGestureRecognizer : UIPanGestureRecognizer
 
 @property (nonatomic, assign) NSUInteger stackPosition;
 

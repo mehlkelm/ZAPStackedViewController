@@ -6,7 +6,7 @@
 //  Copyright 2011 Zozi Apps. All rights reserved.
 //
 
-#import "ZAStackedViewContainer.h"
+#import "ZAPStackViewContainer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ZAStackableViewGestureRecognizer.h"
 
@@ -14,7 +14,7 @@
 #define kStackableViewWidth 320.f
 //#define kBorderViewTag 777
 
-@implementation ZAStackedViewContainer
+@implementation ZAPStackViewContainer
 
 - (void)viewDidLoad
 {
@@ -38,7 +38,7 @@
     NSArray *vcs = self.viewControllers;
     self.viewControllers = [[NSMutableArray alloc] initWithCapacity:[vcs count]];
     
-    for (UIViewController <ZAStackableViewController> *viewController in vcs) {
+    for (UIViewController <ZAPStackableViewController> *viewController in vcs) {
         [self pushViewController:viewController animated:NO];
     }
 }
@@ -52,7 +52,7 @@
 
 # pragma mark - View Stacking Stuff
 
-- (void)pushViewController:(UIViewController <ZAStackableViewController> *)viewController animated:(BOOL)animated
+- (void)pushViewController:(UIViewController <ZAPStackableViewController> *)viewController animated:(BOOL)animated
 {
     // TODO: Is it safe to call this externally
     CGFloat desiredWidth = viewController.desiredWidth;
@@ -65,7 +65,7 @@
     [viewController setStackPosition:(int)position];
     viewController.view.layer.masksToBounds = NO;
 
-    ZAStackableViewPanGestureRecognizer *panRec = [[ZAStackableViewPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    ZAPStackableViewPanGestureRecognizer *panRec = [[ZAPStackableViewPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     panRec.stackPosition = position;
     panRec.delegate = self;
     [viewController.view addGestureRecognizer:panRec];
@@ -87,7 +87,7 @@
     [self.navigationBar pushNavigationItem:viewController.navigationItem animated:animated];
 }
 
-- (void)setViewController:(UIViewController <ZAStackableViewController> *)viewController atPosition:(int)position animated:(BOOL)animated {
+- (void)setViewController:(UIViewController <ZAPStackableViewController> *)viewController atPosition:(int)position animated:(BOOL)animated {
     
     CGFloat desiredWidth = viewController.desiredWidth;
     if (! (desiredWidth > 0)) {
@@ -118,7 +118,7 @@
         //TODO: Als eine zusammenhängende Animation, mit layoutviews als completion
         [self popViewControllerWithoutLayoutAnimated:animated];
     }
-    UIViewController<ZAStackableViewController> *topController = [self.viewControllers lastObject];
+    UIViewController<ZAPStackableViewController> *topController = [self.viewControllers lastObject];
     if (numberOfControllersToPop > 0 && [topController respondsToSelector:@selector(didBecomeTopViewController)]) {
         [topController didBecomeTopViewController];
     }
@@ -158,7 +158,7 @@
     }
 }
 
-- (void)replaceViewControllerAtPosition:(int)position with:(UIViewController <ZAStackableViewController> *)viewController animated:(BOOL)animated
+- (void)replaceViewControllerAtPosition:(int)position with:(UIViewController <ZAPStackableViewController> *)viewController animated:(BOOL)animated
 {
     if ([self.viewControllers count] <= position) return;
     
@@ -167,12 +167,12 @@
         viewController.desiredWidth = viewController.view.frame.size.width;
     }
     
-    ZAStackableViewPanGestureRecognizer *panRec = [[ZAStackableViewPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    ZAPStackableViewPanGestureRecognizer *panRec = [[ZAPStackableViewPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     panRec.stackPosition = position;
     panRec.delegate = self;
     [viewController.view addGestureRecognizer:panRec];
     
-    UIViewController <ZAStackableViewController> *oldVc = (UIViewController <ZAStackableViewController> *) [self.viewControllers objectAtIndex:position];
+    UIViewController <ZAPStackableViewController> *oldVc = (UIViewController <ZAPStackableViewController> *) [self.viewControllers objectAtIndex:position];
     if (oldVc == viewController) return;
 
     [viewController setViewStack:self];
@@ -214,7 +214,7 @@
     CGFloat totalWidth = 0.0f;
     int count = (int)[self.viewControllers count];
     for (NSUInteger v = 0; v <= position && v < count; v++) {
-        UIViewController <ZAStackableViewController> *viewController = [self.viewControllers objectAtIndex:v];
+        UIViewController <ZAPStackableViewController> *viewController = [self.viewControllers objectAtIndex:v];
         totalWidth += [viewController desiredWidth];
     }
     return totalWidth;
@@ -230,7 +230,7 @@
         //NSLog(@"Views can be laid without overlap");
 
         for (NSUInteger pos = 0; pos < controllerCount; pos++) {
-            UIViewController <ZAStackableViewController> *vc = [self.viewControllers objectAtIndex:pos];
+            UIViewController <ZAPStackableViewController> *vc = [self.viewControllers objectAtIndex:pos];
             
             CGFloat viewWidth = [vc desiredWidth];
             CGFloat xOrigin = 0.0f;
@@ -288,8 +288,8 @@
         
         for (NSUInteger pos = 1; pos < controllerCount; pos++) {
             
-            UIViewController <ZAStackableViewController> *underSlider = [self.viewControllers objectAtIndex:(pos - 1)];
-            UIViewController <ZAStackableViewController> *overSlider = (UIViewController <ZAStackableViewController> *) [self.viewControllers objectAtIndex:pos];
+            UIViewController <ZAPStackableViewController> *underSlider = [self.viewControllers objectAtIndex:(pos - 1)];
+            UIViewController <ZAPStackableViewController> *overSlider = (UIViewController <ZAPStackableViewController> *) [self.viewControllers objectAtIndex:pos];
             
             CGFloat thisStepsMaxOverlap = [underSlider desiredWidth] - underSlider.minVisibleWidth;
             CGFloat thisStepsOverlap = MIN(neededOverlapRemaining, thisStepsMaxOverlap);
@@ -345,13 +345,13 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    if ([gestureRecognizer isKindOfClass:[ZAStackableViewPanGestureRecognizer class]]) {
-        ZAStackableViewPanGestureRecognizer *panRec = (ZAStackableViewPanGestureRecognizer *)gestureRecognizer;
+    if ([gestureRecognizer isKindOfClass:[ZAPStackableViewPanGestureRecognizer class]]) {
+        ZAPStackableViewPanGestureRecognizer *panRec = (ZAPStackableViewPanGestureRecognizer *)gestureRecognizer;
         
         NSUInteger pos = panRec.stackPosition;
         if ([self.viewControllers count] <= pos) return NO;
         
-        UIViewController <ZAStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
+        UIViewController <ZAPStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
         if (!viewController.slidable) return NO;
         
         CGPoint translation = [panRec translationInView:self.contentView];
@@ -361,11 +361,11 @@
     return NO;
 }
 
-- (void)handlePanGesture:(ZAStackableViewPanGestureRecognizer *)sender {
+- (void)handlePanGesture:(ZAPStackableViewPanGestureRecognizer *)sender {
     
     NSUInteger viewCount = [self.viewControllers count];
     NSUInteger pos = sender.stackPosition;
-    UIViewController <ZAStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
+    UIViewController <ZAPStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
     
     if ([sender velocityInView:self.contentView].x >= 1111) {
         [self popViewControllersDownTo:pos animated:YES]; // The dragged view could be not the one on top
@@ -385,7 +385,7 @@
         sender.view.frame = frame;
         // The dragged view could be not the one on top
         for (int i = (int)pos + 1; i < viewCount; i++) {
-            UIViewController <ZAStackableViewController> *higherViewController = [self.viewControllers objectAtIndex:i];
+            UIViewController <ZAPStackableViewController> *higherViewController = [self.viewControllers objectAtIndex:i];
             CGRect higherFrame = higherViewController.view.frame;
             if (frame.origin.x > higherFrame.origin.x - (i - pos) * viewController.minVisibleWidth) {
                 higherFrame.origin.x = frame.origin.x + (i - pos) * viewController.minVisibleWidth;

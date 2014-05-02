@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZAStackedViewContainer.h"
+#import "ZAPStackViewContainer.h"
 
-@interface ZAStackableViewController : UIViewController <ZAStackableViewController>
+@interface ZAPStackableViewController : UIViewController <ZAPStackableViewController>
 
-@property (nonatomic, weak) ZAStackedViewContainer *viewStack;
+@property (nonatomic, weak) ZAPStackViewContainer *viewStack;
 @property (nonatomic, assign) int stackPosition;
 @property (nonatomic, assign) BOOL stretch;
 @property (nonatomic, assign) CGFloat desiredWidth;

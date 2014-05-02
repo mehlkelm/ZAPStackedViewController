@@ -6,13 +6,13 @@
 //  Copyright (c) 2012 Zozi Apps. All rights reserved.
 //
 
-#import "ZAStackableViewController.h"
+#import "ZAPStackableViewController.h"
 
-@interface ZAStackableViewController ()
+@interface ZAPStackableViewController ()
 
 @end
 
-@implementation ZAStackableViewController
+@implementation ZAPStackableViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     

@@ -10,12 +10,12 @@
 
 #define kDefaultMinVisibleWidth 60.0f
 
-@class ZAStackedViewContainer;
+@class ZAPStackViewContainer;
 
-@protocol ZAStackableViewController <NSObject>
+@protocol ZAPStackableViewController <NSObject>
 
-- (ZAStackedViewContainer *)viewStack;
-- (void)setViewStack:(ZAStackedViewContainer *)viewStack;
+- (ZAPStackViewContainer *)viewStack;
+- (void)setViewStack:(ZAPStackViewContainer *)viewStack;
 
 - (int)stackPosition;
 - (void)setStackPosition:(int)position;
@@ -40,7 +40,7 @@
 
 @end
 
-@interface ZAStackedViewContainer : UIViewController <UIGestureRecognizerDelegate> {
+@interface ZAPStackViewContainer : UIViewController <UIGestureRecognizerDelegate> {
     
     CGRect _slidableViewFrameCache;
 }
@@ -51,9 +51,9 @@
 @property (nonatomic, strong) NSMutableArray *viewControllers;
 @property (nonatomic, strong) UINavigationBar *navigationBar;
 
-- (void)pushViewController:(UIViewController <ZAStackableViewController> *)viewController animated:(BOOL)animated;
-- (void)setViewController:(UIViewController <ZAStackableViewController> *)viewController atPosition:(int)position animated:(BOOL)animated;
-- (void)replaceViewControllerAtPosition:(int)position with:(UIViewController <ZAStackableViewController> *)viewController animated:(BOOL)animated;
+- (void)pushViewController:(UIViewController <ZAPStackableViewController> *)viewController animated:(BOOL)animated;
+- (void)setViewController:(UIViewController <ZAPStackableViewController> *)viewController atPosition:(int)position animated:(BOOL)animated;
+- (void)replaceViewControllerAtPosition:(int)position with:(UIViewController <ZAPStackableViewController> *)viewController animated:(BOOL)animated;
 - (void)popViewControllersDownTo:(NSUInteger)remainingControllerCount animated:(BOOL)animated;
 - (void)popViewControllers:(NSUInteger)numberOfControllersToPop animated:(BOOL)animated;
 - (void)popViewControllerAnimated:(BOOL)animated;

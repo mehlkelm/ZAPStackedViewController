@@ -8,6 +8,6 @@
 
 #import "ZAStackableViewGestureRecognizer.h"
 
-@implementation ZAStackableViewPanGestureRecognizer
+@implementation ZAPStackableViewPanGestureRecognizer
 
 @end
