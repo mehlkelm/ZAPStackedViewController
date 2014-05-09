@@ -19,22 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    /* Stack Content View */
-    CGRect contentFrame = self.view.bounds;
-    contentFrame.origin.y += 20;
-    contentFrame.size.height -= 20;
-    self.contentView = [[UIView alloc] initWithFrame:contentFrame];
-    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    if (self.backgroundView) {
-        self.backgroundView.frame = self.view.bounds;
-        self.view = self.backgroundView;
-    } else if (self.backgroundColor) {
-        self.view.backgroundColor = self.backgroundColor;
-    }
-    [self.view addSubview:self.contentView];
-    
     NSArray *vcs = self.viewControllers;
     self.viewControllers = [[NSMutableArray alloc] initWithCapacity:[vcs count]];
     
@@ -72,13 +56,13 @@
 
     CGFloat xOrigin = 0.0f;
     if (position > 0) {
-        xOrigin = self.view.frame.size.width;
+        xOrigin = self.view.bounds.size.width;
     }
-    CGRect animationStartFrame = CGRectMake(xOrigin, 0.0f, [viewController desiredWidth], self.contentView.frame.size.height);
+    CGRect animationStartFrame = CGRectMake(xOrigin, 0.0f, [viewController desiredWidth], self.view.bounds.size.height);
     viewController.view.frame = animationStartFrame;
     [self addChildViewController:viewController];
     [self.viewControllers addObject:viewController];
-    [self.contentView addSubview:viewController.view];
+    [self addSubview:viewController.view];
     [viewController didMoveToParentViewController:self];
     
     [self layoutViewsAnimated:animated];
@@ -135,7 +119,7 @@
     UIViewController *popIt;
     if ([self.viewControllers count] > 0) {
         popIt = [self.viewControllers lastObject];
-        CGRect animationEndFrame = CGRectMake(self.contentView.frame.size.width,
+        CGRect animationEndFrame = CGRectMake(self.view.bounds.size.width,
                    0.0f,
                    popIt.view.frame.size.width,
                    popIt.view.frame.size.height);
@@ -190,7 +174,7 @@
             [viewController didMoveToParentViewController:self];
         }];
     } else {
-        [self.contentView addSubview:viewController.view];
+        [self addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
         [oldVc.view removeFromSuperview];
         [oldVc removeFromParentViewController];
@@ -223,8 +207,25 @@
 - (void)layoutViewsAnimated:(BOOL)animated
 {
     CGFloat cumulativeWidth = [self cumulativeViewWidth];
-    CGFloat availableWidth = self.contentView.frame.size.width;
+    CGFloat availableWidth = self.view.bounds.size.width;
     NSUInteger controllerCount = [self.viewControllers count];
+    
+    // Layout root view
+    if ([self.viewControllers count] > 0) {
+        UIViewController <ZAPStackableViewController> *rootViewController = (UIViewController <ZAPStackableViewController> *) [self.viewControllers objectAtIndex:0];
+        
+        CGFloat width = MIN([rootViewController desiredWidth], availableWidth);
+        CGRect newFrame = CGRectMake(0.0f, 0.0f, width, self.view.bounds.size.height);
+        
+        void (^animations)(void) = ^{
+            rootViewController.view.frame = newFrame;
+        };
+        if (animated) {
+            [UIView animateWithDuration:0.2 animations:animations completion:nil];
+        } else {
+            animations();
+        }
+    }
     
     if (cumulativeWidth <= availableWidth) {
         //NSLog(@"Views can be laid without overlap");
@@ -242,7 +243,7 @@
             if ([vc stretch] && pos == controllerCount - 1) {
                 viewWidth = MAX([vc desiredWidth], availableWidth - xOrigin);
             }
-            CGRect newFrame = CGRectMake(xOrigin, 0.0f, viewWidth, self.contentView.frame.size.height);
+            CGRect newFrame = CGRectMake(xOrigin, 0.0f, viewWidth, self.view.bounds.size.height);
             //NSLog(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
             vc.view.layer.shadowPath = nil;
             void (^animations)(void) = ^{
@@ -301,7 +302,7 @@
             // }
             underSlider.view.layer.shadowPath = nil;
             overSlider.view.layer.shadowPath = nil;
-            CGRect newFrame = CGRectMake(xOrigin, 0.0f, width, self.contentView.frame.size.height);
+            CGRect newFrame = CGRectMake(xOrigin, 0.0f, width, self.view.bounds.size.height);
             NSLog(@"VC %lu: %@", (unsigned long)pos, NSStringFromCGRect(newFrame));
             void (^animations)(void) = ^{
                 overSlider.view.frame = newFrame;
@@ -354,7 +355,7 @@
         UIViewController <ZAPStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
         if (!viewController.slidable) return NO;
         
-        CGPoint translation = [panRec translationInView:self.contentView];
+        CGPoint translation = [panRec translationInView:self.view];
         if (translation.x > 3 * ABS(translation.y)) return YES;
         if (translation.x < -3 * ABS(translation.y)) return YES;
     }
@@ -367,7 +368,7 @@
     NSUInteger pos = sender.stackPosition;
     UIViewController <ZAPStackableViewController> *viewController = [self.viewControllers objectAtIndex:pos];
     
-    if ([sender velocityInView:self.contentView].x >= 1111) {
+    if ([sender velocityInView:self.view].x >= 1111) {
         [self popViewControllersDownTo:pos animated:YES]; // The dragged view could be not the one on top
         [sender removeTarget:self action:NULL];
         return;
@@ -377,7 +378,7 @@
         _slidableViewFrameCache = sender.view.frame;
     }
     
-    CGPoint translation = [sender translationInView:self.contentView];
+    CGPoint translation = [sender translationInView:self.view];
 
     if (translation.x >= - 23) {
         CGRect frame = _slidableViewFrameCache;
@@ -419,6 +420,12 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self layoutViewsAnimated:YES];
+}
+
+- (void)addSubview:(UIView *)view
+{
+    view.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:view];
 }
 
 @end

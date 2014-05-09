@@ -45,9 +45,6 @@
     CGRect _slidableViewFrameCache;
 }
 
-@property (nonatomic, strong) UIView *backgroundView;
-@property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIColor *backgroundColor;
 @property (nonatomic, strong) NSMutableArray *viewControllers;
 @property (nonatomic, strong) UINavigationBar *navigationBar;
 
