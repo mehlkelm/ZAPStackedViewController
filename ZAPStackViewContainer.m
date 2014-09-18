@@ -21,6 +21,7 @@
     [super viewDidLoad];
     NSArray *vcs = self.viewControllers;
     self.viewControllers = [[NSMutableArray alloc] initWithCapacity:[vcs count]];
+    self.view.clipsToBounds = YES;
     
     for (UIViewController <ZAPStackableViewController> *viewController in vcs) {
         [self pushViewController:viewController animated:NO];
