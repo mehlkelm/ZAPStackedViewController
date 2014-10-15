@@ -257,7 +257,7 @@
                     vc.view.layer.shadowRadius = 0.5f;
                     vc.view.layer.shadowOpacity = 0.3f;
                     vc.view.layer.shadowColor = [[UIColor darkGrayColor] CGColor];
-                    vc.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:vc.view.bounds].CGPath;
+//                    vc.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:vc.view.bounds].CGPath;
 //                    [[vc.view viewWithTag:kBorderViewTag] removeFromSuperview];
                 }
                 else {
@@ -315,7 +315,7 @@
                     overSlider.view.layer.shadowRadius = 0.5f;
                     overSlider.view.layer.shadowOpacity = 0.3f;
                     overSlider.view.layer.shadowColor = [[UIColor darkGrayColor] CGColor];
-                    overSlider.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:overSlider.view.bounds].CGPath;
+//                    overSlider.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:overSlider.view.bounds].CGPath;
 //                    [[overSlider.view viewWithTag:kBorderViewTag] removeFromSuperview];
                 } else {
                     overSlider.view.clipsToBounds = YES;
